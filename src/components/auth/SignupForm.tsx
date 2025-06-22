@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { signup } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
 
 const SignupForm = () => {
@@ -31,9 +30,17 @@ const SignupForm = () => {
     
     setIsLoading(true);
 
-    try {
-      const user = await signup(name, email, password);
-      if (user) {
+    // Simulate signup delay
+    setTimeout(() => {
+      if (name && email && password) {
+        // Store simple user info in localStorage for demo
+        localStorage.setItem('currentUser', JSON.stringify({
+          id: '1',
+          name: name,
+          email: email,
+          role: 'teacher'
+        }));
+        
         toast({
           title: "Account created",
           description: "Your account has been created successfully!",
@@ -42,19 +49,12 @@ const SignupForm = () => {
       } else {
         toast({
           title: "Signup failed",
-          description: "This email may already be in use. Please try another.",
+          description: "Please fill in all fields.",
           variant: "destructive",
         });
       }
-    } catch (error) {
-      toast({
-        title: "Signup error",
-        description: "An unexpected error occurred. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
       setIsLoading(false);
-    }
+    }, 1000);
   };
 
   return (

@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { login } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
 
 const LoginForm = () => {
@@ -19,30 +18,31 @@ const LoginForm = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    try {
-      const user = await login(email, password);
-      if (user) {
+    // Simulate login delay
+    setTimeout(() => {
+      if (email && password) {
+        // Store simple user info in localStorage for demo
+        localStorage.setItem('currentUser', JSON.stringify({
+          id: '1',
+          name: email.split('@')[0],
+          email: email,
+          role: 'teacher'
+        }));
+        
         toast({
           title: "Login successful",
-          description: `Welcome back, ${user.name}!`,
+          description: `Welcome back!`,
         });
         navigate("/dashboard");
       } else {
         toast({
           title: "Login failed",
-          description: "Invalid email or password. Please try again.",
+          description: "Please enter both email and password.",
           variant: "destructive",
         });
       }
-    } catch (error) {
-      toast({
-        title: "Login error",
-        description: "An unexpected error occurred. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
       setIsLoading(false);
-    }
+    }, 1000);
   };
 
   return (

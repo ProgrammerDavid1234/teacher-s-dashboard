@@ -1,23 +1,25 @@
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { getCurrentUser } from "@/lib/auth";
 import DashboardHeader from "./DashboardHeader";
 import DashboardSidebar from "./DashboardSidebar";
 
 const DashboardLayout = () => {
   const navigate = useNavigate();
-  const user = getCurrentUser();
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Check if user is logged in
-    if (!user) {
+    // Check if user is logged in via localStorage
+    const currentUser = localStorage.getItem('currentUser');
+    if (!currentUser) {
       navigate("/login");
+    } else {
+      setUser(JSON.parse(currentUser));
     }
-  }, [user, navigate]);
+  }, [navigate]);
 
   if (!user) {
-    return null; // Don't render anything while redirecting
+    return null; // Don't render anything while checking auth
   }
 
   return (
